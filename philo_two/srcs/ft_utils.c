@@ -6,26 +6,31 @@
 /*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 21:45:46 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 15:46:22 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/07 17:54:22 by gaetan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-int		ft_clean(void)
+void				ft_free(void)
 {
-	int i;
+	int			i;
+	char		name[50];
 
-	if (g_banquet.philos)
-		free(g_banquet.philos);
 	i = 0;
-	if (g_banquet.mutex)
+	sem_unlink(TAKEFORKS);
+	sem_unlink(FORKS);
+	sem_unlink(WRITE);
+	sem_unlink(DEATH);
+	if (g_banquet.philos)
 		while (i < g_banquet.nb_philos)
-			pthread_mutex_destroy(&g_banquet.mutex[i++]);
-	free(g_banquet.mutex);
+		{
+			ft_name(name, i + 1);
+			sem_unlink(name);
+			i++;
+		}
+	free(g_banquet.philos);
 	g_banquet.philos = NULL;
-	pthread_mutex_destroy(&g_banquet.write);
-	return (0);
 }
 
 void	ft_putchar_fd(char c, int fd)

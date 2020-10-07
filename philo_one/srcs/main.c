@@ -19,6 +19,7 @@ int		get_params(char **av)
 	g_banquet.eat = ft_atoi(av[3]);
 	g_banquet.sleep = ft_atoi(av[4]);
 	g_banquet.timetoeat = (av[5] ? ft_atoi(av[5]) : 0);
+	g_banquet.alive = 0;
 	if ((g_banquet.nb_philos <= 0 || g_banquet.eat <= 0 || g_banquet.eat <= 0
 	|| g_banquet.sleep <= 0 || g_banquet.timetoeat < 0))
 		return (FAIL);
@@ -80,7 +81,6 @@ int		init(void)
 			g_banquet.philos[i].lfork = i;
 			g_banquet.philos[i].rfork = (i + 1 != g_banquet.nb_philos) ? i + 1 : 0;
 	}
-	g_banquet.alive = 0;
 	return(init_threads());
 }
 

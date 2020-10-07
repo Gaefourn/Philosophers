@@ -19,6 +19,7 @@ int		get_params(char **av)
 	g_banquet.eat = ft_atoi(av[3]);
 	g_banquet.sleep = ft_atoi(av[4]);
 	g_banquet.timetoeat = (av[5] ? ft_atoi(av[5]) : 0);
+	g_banquet.alive = 0;
 	if ((g_banquet.nb_philos <= 0 || g_banquet.eat <= 0 || g_banquet.eat <= 0
 	|| g_banquet.sleep <= 0 || g_banquet.timetoeat < 0))
 		return (FAIL);
@@ -47,40 +48,41 @@ int		init_threads(void)
 	pthread_t		thread[g_banquet.nb_philos];
 	int					i;
 	
+	sem_unlink(TAKEFORKS);
+	sem_unlink(FORKS);
+	sem_unlink(WRITE);
+	sem_unlink(DEATH);
+	g_banquet.take_forks = sem_open(TAKEFORKS, O_CREAT, 0666, 1);
+	g_banquet.forks = sem_open(FORKS, O_CREAT, 0666, g_banquet.nb_philos);
+	g_banquet.write = sem_open(WRITE, O_CREAT, 0666, 1);
 	i = -1;
-	pthread_mutex_init(&g_banquet.write, NULL);	
 	while (++i < g_banquet.nb_philos)
 	{
 		pthread_create(&thread[i], NULL, &philo_fun, (void *)(&g_banquet.philos[i]));
 		pthread_detach(thread[i]);
-		usleep(500);
+		usleep(100);
 	}
 	return (SUCCESS);
 }
 
 int		init(void)
 {
-	int	i;
+	int			i;
+	char	name[50];
 	
 	i = -1;
 	g_banquet.philos = NULL;
 	if (!(g_banquet.philos = malloc(sizeof(t_philo) * g_banquet.nb_philos)))
-		return (FAIL);
-	g_banquet.mutex= NULL;
-	if (!(g_banquet.mutex = malloc(sizeof(pthread_mutex_t) * 
-		g_banquet.nb_philos)))
 		return (FAIL);
 	while (++i < g_banquet.nb_philos)
 	{
 			g_banquet.philos[i].pos = i;
 			g_banquet.philos[i].last_meal = 0;
 			g_banquet.philos[i].meal_count = 0;
-			pthread_mutex_init(&g_banquet.mutex[i], NULL);
-			pthread_mutex_init(&g_banquet.philos[i].eating, NULL);
-			g_banquet.philos[i].lfork = i;
-			g_banquet.philos[i].rfork = (i + 1 != g_banquet.nb_philos) ? i + 1 : 0;
+			ft_name(name, i + 1);
+			sem_unlink(name);
+			g_banquet.philos[i].eating = sem_open(name, O_CREAT, 0666, 1);
 	}
-	g_banquet.alive = 0;
 	return(init_threads());
 }
 
@@ -105,6 +107,6 @@ int	main(int ac, char **av)
 		print_log(&g_banquet.philos[g_banquet.which], MAX_EAT_REACHED);
 	else
 		print_log(&g_banquet.philos[g_banquet.which], DIED);
-	ft_clean();	
+	ft_free();	
 	return (0);
 }

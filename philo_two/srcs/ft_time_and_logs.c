@@ -6,7 +6,7 @@
 /*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 15:50:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 15:46:27 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/07 17:41:47 by gaetan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,13 @@ void				print_log(t_philo *philo, const int status)
 	{
 		i = 0;
 		add_nb_to_log(log, &i, get_time() - g_banquet.start, '\t');
-		pthread_mutex_lock(&g_banquet.write);
+		sem_wait(g_banquet.write);
 		if (status == MAX_EAT_REACHED)
 		{
 			off = 1;
 			add_status_to_log(log, &i, status);
 			write(1, log, i);
-			pthread_mutex_unlock(&g_banquet.write);
+			sem_post(g_banquet.write);
 			return ;
 		}
 		add_nb_to_log(log, &i, philo->pos + 1, ' ');
@@ -96,5 +96,5 @@ void				print_log(t_philo *philo, const int status)
 		write(1, log, (!off ? i : 0));
 		off = status == DIED ? 1 : off;
 	}
-	pthread_mutex_unlock(&g_banquet.write);
+	sem_post(g_banquet.write);
 }

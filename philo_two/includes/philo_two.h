@@ -9,6 +9,7 @@
 # include <string.h>
 # include <stdint.h>
 # include <semaphore.h>
+# include <fcntl.h>
 
 # define SUCCESS							0
 # define FAIL										1
@@ -29,8 +30,6 @@ typedef struct 			s_philo
 	int								pos;
 	uint64_t					last_meal;
 	uint64_t					death_time;
-	int								rfork;
-	int								lfork;
 	int								meal_count;
 	sem_t						*eating;
 }								t_philo;
@@ -61,6 +60,7 @@ void						*heyboss(void *philo);
 void						ft_usleep(unsigned int n);
 void						ft_actions(t_philo *p);
 void						print_log(t_philo *philo, const int status);
-int								ft_clean(void);
+void						ft_free(void);
+void						ft_name(char *name, int pos);
 
 #endif

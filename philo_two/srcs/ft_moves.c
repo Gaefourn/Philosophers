@@ -6,48 +6,72 @@
 /*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 15:13:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 15:45:47 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/07 18:05:35 by gaetan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
+void			ft_name(char *name, int pos)
+{
+	int			i;
+	const char	prefix[7] = "/philo-";
+
+	i = -1;
+	while (++i < 7)
+		name[i] = prefix[i];
+	while (pos)
+	{
+		name[i++] = (pos % 10) + '0';
+		pos /= 10;
+	}
+	name[i] = '\0';
+}
+
 void	*heyboss(void *philo)
 {
-	t_philo *p;
-	
+	t_philo		*p;
+
 	p = (t_philo*)philo;
 	while (1)
 	{
 		usleep(1000);
+		if (sem_wait(p->eating))
+			return ((void *)FAIL);
 		if (p->death_time < get_time())
 		{
 			g_banquet.alive = DIED;
 			g_banquet.which = p->pos;
-			break ;
+			if (sem_post(p->eating))
+				return ((void *)FAIL);
+			return (SUCCESS);
 		}
+		if (sem_post(p->eating))
+			return ((void *)FAIL);
 	}
-	return ((void*)DIED);
+	return ((void *)SUCCESS);
 }
 
 void	ft_actions(t_philo *p)
 {
-	pthread_mutex_lock(&g_banquet.mutex[p->pos % 2 ? p->rfork : p->lfork]);
+	sem_wait(g_banquet.take_forks);
+	sem_wait(g_banquet.forks);
 	print_log(p, HAS_TAKEN_A_FORK);
-	pthread_mutex_lock(&g_banquet.mutex[p->pos % 2 ? p->lfork : p->rfork]);
+	sem_wait(g_banquet.forks);
 	print_log(p, HAS_TAKEN_A_FORK);
-	pthread_mutex_lock(&p->eating);
+	sem_post(g_banquet.take_forks);
+	sem_wait(p->eating);
 	p->last_meal = get_time();
 	p->death_time = p->last_meal + g_banquet.die;
 	print_log(p, IS_EATING);
 	p->meal_count += 1;
-	ft_usleep(g_banquet.eat);
-	pthread_mutex_unlock(&g_banquet.mutex[p->pos % 2 ? p->rfork : p->pos]);
-	pthread_mutex_unlock(&g_banquet.mutex[p->pos % 2 ? p->pos : p->rfork]);
-	pthread_mutex_unlock(&p->eating);
 	if (p->meal_count == g_banquet.timetoeat)
 		g_banquet.alive = MAX_EAT_REACHED;
+	ft_usleep(g_banquet.eat);
+	sem_post(p->eating);
 	print_log(p, IS_SLEEPING);
+	sem_post(g_banquet.forks);
+	sem_post(g_banquet.forks);
 	ft_usleep(g_banquet.sleep);
 	print_log(p, IS_THINKING);
 	usleep(100);

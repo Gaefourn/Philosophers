@@ -6,7 +6,7 @@
 /*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 15:13:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 15:35:49 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/07 17:47:21 by gaetan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@ void	*heyboss(void *philo)
 	while (1)
 	{
 		usleep(1000);
+		pthread_mutex_lock(&p->eating);
 		if (p->death_time < get_time())
 		{
 			g_banquet.alive = DIED;
 			g_banquet.which = p->pos;
+			pthread_mutex_unlock(&p->eating);
 			break ;
 		}
+		pthread_mutex_unlock(&p->eating);
 	}
 	return ((void*)DIED);
 }
