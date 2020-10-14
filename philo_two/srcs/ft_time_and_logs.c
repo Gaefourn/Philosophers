@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_time_and_logs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 15:50:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 17:41:47 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/14 15:45:18 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void		ft_usleep(unsigned int n)
+void				ft_usleep(unsigned int n)
 {
 	uint64_t	start_time;
 

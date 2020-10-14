@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaefourn <gaefourn@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/01 01:26:07 by gaefourn            #+#    #+#             */
-/*   Updated: 2020/10/01 01:32:19 by gaefourn           ###   ########.fr       */
+/*   Created: 2020/10/14 15:39:10 by user42            #+#    #+#             */
+/*   Updated: 2020/10/14 15:45:56 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int		get_params(char **av)
 {
+	g_banquet.check = 0;
 	g_banquet.nb_philos = ft_atoi(av[1]);
 	g_banquet.die = ft_atoi(av[2]);
 	g_banquet.eat = ft_atoi(av[3]);
@@ -30,7 +31,7 @@ void	*philo_fun(void *philo)
 {
 	t_philo		*p;
 	pthread_t	boss;
-	
+
 	p = (t_philo*)philo;
 	g_banquet.start = get_time();
 	p->last_meal = g_banquet.start;
@@ -46,8 +47,8 @@ void	*philo_fun(void *philo)
 int		init_threads(void)
 {
 	pthread_t		thread[g_banquet.nb_philos];
-	int					i;
-	
+	int				i;
+
 	sem_unlink(TAKEFORKS);
 	sem_unlink(FORKS);
 	sem_unlink(WRITE);
@@ -58,7 +59,8 @@ int		init_threads(void)
 	i = -1;
 	while (++i < g_banquet.nb_philos)
 	{
-		pthread_create(&thread[i], NULL, &philo_fun, (void *)(&g_banquet.philos[i]));
+		pthread_create(&thread[i], NULL, &philo_fun,
+			(void *)(&g_banquet.philos[i]));
 		pthread_detach(thread[i]);
 		usleep(100);
 	}
@@ -68,45 +70,45 @@ int		init_threads(void)
 int		init(void)
 {
 	int			i;
-	char	name[50];
-	
+	char		name[50];
+
 	i = -1;
 	g_banquet.philos = NULL;
 	if (!(g_banquet.philos = malloc(sizeof(t_philo) * g_banquet.nb_philos)))
 		return (FAIL);
 	while (++i < g_banquet.nb_philos)
 	{
-			g_banquet.philos[i].pos = i;
-			g_banquet.philos[i].last_meal = 0;
-			g_banquet.philos[i].meal_count = 0;
-			ft_name(name, i + 1);
-			sem_unlink(name);
-			g_banquet.philos[i].eating = sem_open(name, O_CREAT, 0666, 1);
+		g_banquet.philos[i].pos = i;
+		g_banquet.philos[i].last_meal = 0;
+		g_banquet.philos[i].meal_count = 0;
+		ft_name(name, i + 1);
+		sem_unlink(name);
+		g_banquet.philos[i].eating = sem_open(name, O_CREAT, 0666, 1);
 	}
-	return(init_threads());
+	return (init_threads());
 }
 
-int	main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 	{
 		write(1, "Wrong number of arguments.\n", 28);
 		return (0);
 	}
-	memset(&g_banquet, 0 ,sizeof(g_banquet));
+	memset(&g_banquet, 0, sizeof(g_banquet));
 	if (get_params(av) == FAIL)
 	{
 		write(1, "At least 1 argument is invalid.\n", 32);
 		return (FAIL);
 	}
 	if (init())
-		return(FAIL);
+		return (FAIL);
 	while (g_banquet.alive == 0)
 		continue;
 	if (g_banquet.alive == MAX_EAT_REACHED)
 		print_log(&g_banquet.philos[g_banquet.which], MAX_EAT_REACHED);
 	else
 		print_log(&g_banquet.philos[g_banquet.which], DIED);
-	ft_free();	
+	ft_free();
 	return (0);
 }

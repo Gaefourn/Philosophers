@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_moves.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 15:13:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/07 18:05:35 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/14 15:47:41 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void			ft_name(char *name, int pos)
+void		ft_name(char *name, int pos)
 {
 	int			i;
 	const char	prefix[7] = "/philo-";
@@ -28,7 +28,7 @@ void			ft_name(char *name, int pos)
 	name[i] = '\0';
 }
 
-void	*heyboss(void *philo)
+void		*heyboss(void *philo)
 {
 	t_philo		*p;
 
@@ -52,7 +52,14 @@ void	*heyboss(void *philo)
 	return ((void *)SUCCESS);
 }
 
-void	ft_actions(t_philo *p)
+void		ft_check(void)
+{
+	g_banquet.check++;
+	if (g_banquet.check == g_banquet.nb_philos)
+		g_banquet.alive = MAX_EAT_REACHED;
+}
+
+void		ft_actions(t_philo *p)
 {
 	sem_wait(g_banquet.take_forks);
 	sem_wait(g_banquet.forks);
@@ -66,7 +73,7 @@ void	ft_actions(t_philo *p)
 	print_log(p, IS_EATING);
 	p->meal_count += 1;
 	if (p->meal_count == g_banquet.timetoeat)
-		g_banquet.alive = MAX_EAT_REACHED;
+		ft_check();
 	ft_usleep(g_banquet.eat);
 	sem_post(p->eating);
 	print_log(p, IS_SLEEPING);
