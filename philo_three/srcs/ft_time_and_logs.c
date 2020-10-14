@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_time_and_logs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 15:50:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/08 18:04:07 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/14 15:27:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
 
-void		ft_usleep(unsigned int n)
+void				ft_usleep(unsigned int n)
 {
 	uint64_t	start_time;
 
@@ -78,9 +78,11 @@ void				print_log(t_philo *philo, const int status)
 	memset(log, 0, 50);
 	sem_wait(g_banquet.off);
 	i = 0;
-	add_nb_to_log(log, &i, get_time() - g_banquet.start, '\t');
 	if (status != MAX_EAT_REACHED)
+	{
+		add_nb_to_log(log, &i, get_time() - g_banquet.start, '\t');
 		add_nb_to_log(log, &i, philo->pos + 1, ' ');
+	}
 	add_status_to_log(log, &i, status);
 	sem_wait(g_banquet.write);
 	write(1, log, i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 21:45:46 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/08 18:05:33 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/14 14:01:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void				ft_free(void)
 	g_banquet.philos = NULL;
 }
 
-void	ft_putchar_fd(char c, int fd)
+void				ft_putchar_fd(char c, int fd)
 {
 	write(fd, &c, 1);
 }
 
-void	ft_putnbr_fd(int n, int fd)
+void				ft_putnbr_fd(int n, int fd)
 {
 	long nb;
 
@@ -59,7 +59,7 @@ void	ft_putnbr_fd(int n, int fd)
 		ft_putchar_fd(nb + 48, fd);
 }
 
-int	ft_atoi(const char *nptr)
+int					ft_atoi(const char *nptr)
 {
 	int nb;
 	int i;

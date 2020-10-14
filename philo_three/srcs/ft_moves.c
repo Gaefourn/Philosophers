@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_moves.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gaetan <gaetan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 15:13:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/08 18:00:12 by gaetan           ###   ########.fr       */
+/*   Updated: 2020/10/14 15:23:06 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
 
-void			ft_name(char *name, int pos, int eat)
+void	ft_name(char *name, int pos, int eat)
 {
 	int			i;
 	const char	prefix[7] = "/philo-";
@@ -33,12 +33,12 @@ void			ft_name(char *name, int pos, int eat)
 	name[i] = '\0';
 }
 
-void			*handle_timetoeat(void *philo)
+void	*handle_time_to_eat(void *rofl)
 {
 	int			nb_times_philos_have_eaten;
 	int			i;
 
-	(void)philo;
+	(void)rofl;
 	nb_times_philos_have_eaten = 0;
 	while (nb_times_philos_have_eaten < g_banquet.timetoeat)
 	{
@@ -91,13 +91,9 @@ void	ft_actions(t_philo *p)
 	p->death_time = p->last_meal + g_banquet.die;
 	print_log(p, IS_EATING);
 	p->meal_count += 1;
-	if (p->meal_count == g_banquet.timetoeat)
-	{
-		print_log(p, MAX_EAT_REACHED);
-		sem_post(g_banquet.stop);
-	}
 	ft_usleep(g_banquet.eat);
 	sem_post(p->eating);
+	sem_post(p->eat_count);
 	print_log(p, IS_SLEEPING);
 	sem_post(g_banquet.forks);
 	sem_post(g_banquet.forks);
