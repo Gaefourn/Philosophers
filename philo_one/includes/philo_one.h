@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:09:04 by user42            #+#    #+#             */
-/*   Updated: 2020/10/14 13:11:51 by user42           ###   ########.fr       */
+/*   Updated: 2020/10/14 13:27:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct					s_data
 	uint64_t					start;
 	int							alive;
 	int							which;
+	int							check;
 	pthread_mutex_t				*mutex;
 	pthread_mutex_t				write;
 }								t_data;

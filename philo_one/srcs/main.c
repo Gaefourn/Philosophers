@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:15:50 by user42            #+#    #+#             */
-/*   Updated: 2020/10/14 13:17:24 by user42           ###   ########.fr       */
+/*   Updated: 2020/10/14 13:27:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		get_params(char **av)
 	g_banquet.sleep = ft_atoi(av[4]);
 	g_banquet.timetoeat = (av[5] ? ft_atoi(av[5]) : 0);
 	g_banquet.alive = 0;
+	g_banquet.check = 0;
 	if ((g_banquet.nb_philos <= 0 || g_banquet.eat <= 0 || g_banquet.eat <= 0
 	|| g_banquet.sleep <= 0 || g_banquet.timetoeat < 0))
 		return (FAIL);

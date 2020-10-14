@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 15:13:04 by gaetan            #+#    #+#             */
-/*   Updated: 2020/10/14 13:13:54 by user42           ###   ########.fr       */
+/*   Updated: 2020/10/14 13:43:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ void	*heyboss(void *philo)
 	return ((void*)DIED);
 }
 
+void	ft_check(void)
+{
+	g_banquet.check++;
+	if (g_banquet.check == g_banquet.nb_philos)
+		g_banquet.alive = MAX_EAT_REACHED;
+}
+
 void	ft_actions(t_philo *p)
 {
 	pthread_mutex_lock(&g_banquet.mutex[p->pos % 2 ? p->rfork : p->lfork]);
@@ -49,7 +56,7 @@ void	ft_actions(t_philo *p)
 	pthread_mutex_unlock(&g_banquet.mutex[p->pos % 2 ? p->pos : p->rfork]);
 	pthread_mutex_unlock(&p->eating);
 	if (p->meal_count == g_banquet.timetoeat)
-		g_banquet.alive = MAX_EAT_REACHED;
+		ft_check();
 	print_log(p, IS_SLEEPING);
 	ft_usleep(g_banquet.sleep);
 	print_log(p, IS_THINKING);
